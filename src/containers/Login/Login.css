@@ -1,0 +1,31 @@
+
+.modal-form{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+.modal-form__input{
+	padding: 0.5rem;
+	width: 100%;
+	margin-top: 1rem;
+	border-radius: 10px;
+	font-size: 1rem;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	-ms-border-radius: 10px;
+	-o-border-radius: 10px;
+}
+.modal-form__btn{
+	color: #fff;
+	background-color: rgb(0, 67, 222);
+	border: none;
+	border-radius: 5px;
+	font-size: 1rem;
+	width: 100%;
+	padding: .5rem;
+	margin-top: 1rem;
+}
+.modal-form__label{
+	font-size: 1.2rem;
+}

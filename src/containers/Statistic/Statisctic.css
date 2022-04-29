@@ -1,0 +1,73 @@
+.statistic__container{
+	max-width: 1520px;
+	margin: 0 auto;
+}
+.statistic__title{
+	padding: 1rem 0 0 1rem;
+	font-weight: 500;
+	margin: 0;
+}
+.title{
+	text-align: center;
+	
+}
+.statistic__table{
+	background-color: #0BC458;
+	border-radius: 10px;
+	color: white;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	-ms-border-radius: 10px;
+	-o-border-radius: 10px;
+	padding: 0 2em 2rem 2rem;
+}
+.statistic__game{
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1.3fr;
+	margin-top: 1rem;
+}
+.statistic__item{
+	text-align: center;
+	border-left: 1px solid rgb(255, 255, 255);
+}
+.statistic__item:first-child{
+	border-left: none;
+}
+.item__title{
+	background-color: #1E8D4C;
+	/* border-radius: 5px; */
+	padding: .8rem 0;
+}
+.item__value{
+	padding: 1rem 0;
+
+}
+.item__btn{
+	border: none;
+	color: white;
+	border-radius: 5px;
+	font-size: 15px;
+	padding: .5rem 1rem;
+}
+.btn-success{
+	background-color: #12890d;
+	margin-right: 8px;
+}
+.btn-danger{
+	background-color: red;
+}
+.btn-danger:hover{
+	background-color: rgb(156, 0, 0);
+}
+.btn-success:hover{
+	background-color: rgb(0, 113, 0);
+}
+.btn-clear{
+	margin-top: 1rem;
+	background-color: red;
+	border: none;
+	color: white;
+	border-radius: 5px;
+	font-size: 15px;
+	padding: .5rem 1rem;
+}

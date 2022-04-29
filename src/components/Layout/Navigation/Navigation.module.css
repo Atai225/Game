@@ -1,0 +1,24 @@
+.nav{
+	display: flex;
+	align-items: center;
+	justify-content: end;
+}
+.navlink{
+	font-size: 1.4rem;
+	text-decoration: none;
+	color: white;
+}
+.navlink:hover{
+	color: rgb(0, 0, 0);
+	background: #ffffff;
+	padding: 4px 8px;
+	border-radius: 10px;
+	transition: .2s linear;
+	-webkit-transition: .2s linear;
+	-moz-transition: .2s linear;
+	-ms-transition: .2s linear;
+	-o-transition: .2s linear;
+}
+.navlink:nth-child(1){
+	margin-right: 2rem;
+}
