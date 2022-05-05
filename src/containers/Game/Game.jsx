@@ -9,79 +9,74 @@ import {
   changeGameStatus,
   setHistory,
   clearCurrent,
+  colorChanger,
+  setCurrentClue,
+  clearCluesStatus
 } from "../../store/reducers/game.reducer";
-import Statisctic from "../Statistic/Statisctic";
+import { useNavigate } from "react-router-dom";
 
 function Game() {
-  const [show, setShow] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [categoriesId, setCategoriesId] = useState([
-    11496, 11499, 11544, 11498, 11513,
-  ]);
+  const dispatch = useDispatch();
+  const nav = useNavigate()
   const result = useSelector((store) => store.game.currentGame);
+  const categories = useSelector((store) => store.game.categories);
+  const clues = useSelector((store) => store.game.questions);
+  const status = useSelector((store) => store.game.status);
+
+  const [show, setShow] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [currentCat, setCurrentCat] = useState(null);
   const [answer, setAnswer] = useState(null);
-  const dispatch = useDispatch();
-  const [answerStatus, setAnswerStatus] = useState(false);
-  const [answered, setAnswered] = useState(false);
   const [currentPoints, setCurrentPoints] = useState(0);
-  const [seconds, setSeconds] = useState(60);
+  const [seconds, setSeconds] = useState(59);
   const [timerActive, setTimerActive] = useState(false);
-  const status = useSelector((store) => store.game.status);
-  const [clicked, setClicked] = useState(0)
+  const [answered, setAnswered] = useState(false);
+  const [answerStatus, setAnswerStatus] = useState(false);
+  const [target, setTarget] = useState(null)
 
   const getCat = (id) => {
     setCurrentCat(categories[id]);
   };
 
-  const showQuestion = (clue, id, index) => {
-    setCurrentQuestion(clue);
-    getCat(id);
+  const showQuestion = (clue, i) => {
     setShow(true);
+    setCurrentQuestion(clue);
     setTimerActive(true);
-    setClicked(index)
+    getCat(i);
   };
 
   const changeHandler = (e) => {
     if (e.target.value !== "") {
       setAnswer(e.target.value);
     }
+    setTarget(e.target)
   };
-
+  const clearField =() => {
+    target.value = '';
+  }
   const submitHandler = (e) => {
+    dispatch(setCurrentClue(currentQuestion.id));
     e.preventDefault();
     if (answer !== currentQuestion.answer) {
       dispatch(incIncorrects(currentQuestion?.value));
       setAnswerStatus(false);
+
+      dispatch(colorChanger(false));
     } else if (answer === currentQuestion.answer) {
       dispatch(incCorrects(currentQuestion?.value));
       setAnswerStatus(true);
+
+      dispatch(colorChanger(true));
     }
+    clearField();
     setShow(false);
-    setSeconds(60);
     setTimerActive(false);
+    setSeconds(60);
     setAnswered(true);
     setCurrentPoints(currentQuestion?.value);
   };
 
   useEffect(() => {
-    const fetchCats = () => {
-      const allCats = categoriesId.map((cat) => {
-        return new Promise((resolve) => {
-          fetch(`https://jservice.io/api/category?id=${cat}`)
-            .then((response) => response.json())
-            .then((data) => {
-              resolve(data);
-            });
-        });
-      });
-      Promise.all(allCats).then((res) => {
-        setCategories(res);
-      });
-    };
-    fetchCats();
-
     const interval = setInterval(() => {
       timerActive &&
         setSeconds((seconds) => (seconds > 0 ? seconds - 1 : reset()));
@@ -104,14 +99,6 @@ function Game() {
     setTimerActive(false);
   };
 
-  //   useEffect(() => {
-  // 	const fetchData = async() => {
-  // 		const response = await axios.get(`https://jservice.io/api/random?count=5`);
-  // 		setRes(response.data);
-  // 	}
-  // 	fetchData();
-  // }, [])
-
   const changeStatus = (play) => {
     const now = new Date().toLocaleString();
     dispatch(setClock(now));
@@ -128,10 +115,7 @@ function Game() {
     <div className="container">
       {!status ? (
         <div className="start-game">
-          <button
-            onClick={() => changeStatus(true)}
-            className="btn-start"
-          >
+          <button onClick={() => changeStatus(true)} className="btn-start">
             Начать играть
           </button>
         </div>
@@ -141,29 +125,30 @@ function Game() {
             {categories.map((cat, i) => (
               <div key={i} className="categories">
                 <div className="categories__title">
-                  <span className="categories__name">{cat.title}</span>
+                  <span className="categories__name">{cat}</span>
                 </div>
                 <div className="categories__clues">
-                  {cat.clues.map((clue, index) => (
-                    <btn
-                      className="categories__value"
-                      onClick={() => showQuestion(clue, i, clue.id)}
-                      key={index}
-                    >
-                      {answered ? (
-                        <>
-                          {clicked === clue.id ? <>
-                            {answerStatus ? (
-                              <span>Верно</span>
-                            ) : (
-                              <span>Неверно</span>
-                            )}
-                          </> : <span>{clue.value}</span>}
-                        </>
-                      ) : (
-                        <span>{clue.value}</span>
+                  {clues[i].map((res, index) => (
+                    <div key={index}>
+                      {res.right === true && (
+                        <button className="categories__correct categories__btn">
+                          Верно
+                        </button>
                       )}
-                    </btn>
+                      {res.right === false && (
+                        <button className="categories__wrong categories__btn">
+                          Неверно
+                        </button>
+                      )}
+                      {res.right === null && (
+                        <button
+                          className="categories__value categories__btn"
+                          onClick={() => showQuestion(res, i)}
+                        >
+                          {res.value}
+                        </button>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
@@ -176,13 +161,11 @@ function Game() {
                     {answerStatus ? (
                       <div className="result correct">
                         <div>Ответ верный !!!</div>
-                        <div className="result-points">{currentPoints}</div>
+                        <div className="result-points">+{currentPoints}</div>
                       </div>
                     ) : (
                       <div className="result incorrect">
-                        <div>
-                          Ответ неверный !!!
-                        </div>
+                        <div>Ответ неверный !!!</div>
                         <div className="result-points">-{currentPoints}</div>
                       </div>
                     )}
@@ -197,8 +180,10 @@ function Game() {
                 <button
                   onClick={() => {
                     changeStatus(false);
-                    setAnswered(false)
-                    setAnswerStatus(null)
+                    setAnswered(false);
+                    setAnswerStatus(null);
+                    dispatch(clearCluesStatus())
+                    nav('/')
                   }}
                   className="game__stop-btn"
                 >
@@ -209,9 +194,22 @@ function Game() {
           </div>
           {currentQuestion && (
             <Modal show={show}>
-              <form onSubmit={submitHandler} className="answer-form text-center">
-                <div className="form__header"><div><span className="form__title">{currentCat.title}</span></div> <div><span className="form__points">{currentQuestion.value}</span></div></div>
+              <form
+                onSubmit={submitHandler}
+                className="answer-form text-center"
+              >
+                <div className="form__header">
+                  <div>
+                    <span className="form__title">{currentCat}</span>
+                  </div>{" "}
+                  <div>
+                    <span className="form__points">
+                      {currentQuestion.value}
+                    </span>
+                  </div>
+                </div>
                 <p className="question">{currentQuestion?.question}?</p>
+                <p className="answer">{currentQuestion?.answer}</p>
                 <input
                   onChange={changeHandler}
                   className="answer-field"
@@ -220,9 +218,13 @@ function Game() {
                   placeholder="Введите ответ"
                 />
                 <div className="form__footer">
-                  <div><p>Осталось {seconds} секунд</p></div>
-                  <div><button className="btn-send mt-3">Ответить</button></div>
-                </div >
+                  <div>
+                    <p>Осталось {seconds} секунд</p>
+                  </div>
+                  <div>
+                    <button className="btn-send mt-3">Ответить</button>
+                  </div>
+                </div>
               </form>
             </Modal>
           )}

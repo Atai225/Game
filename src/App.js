@@ -12,12 +12,9 @@ function App() {
    
       <Layout>
         <Routes>
-           {!user ? <Route path='*' element={<Login/>}/> : 
-          <>
+           <Route path='/game' element={<Login/>}/>
             <Route path='/' element={<Game/>}/>
             <Route path='/statistics' element={<Statisctic/>}/>
-          </>
-          }
         </Routes>
       </Layout>
   );

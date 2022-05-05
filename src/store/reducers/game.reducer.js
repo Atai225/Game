@@ -1,9 +1,17 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {
+	createSlice
+} from "@reduxjs/toolkit";
+
+
+
 
 
 const gameSlice = createSlice({
 	name: 'game',
 	initialState: {
+		categories: [],
+		questions: null,
+		loading: "",
 		status: false,
 		history: [],
 		currentGame: {
@@ -13,17 +21,35 @@ const gameSlice = createSlice({
 			points: 0,
 			clock: [],
 		},
-		questions: [],
+		currentClue: null,
+
 	},
 	reducers: {
+		setCurrentClue: (state, action) => {
+			state.currentClue = action.payload
+		},
 		incCorrects: (state, action) => {
-			state.currentGame.correct = state.currentGame.correct+1;
-			state.currentGame.attemps = state.attemps+1;
+			state.currentGame.correct = state.currentGame.correct + 1;
+			state.currentGame.attemps = state.currentGame.attemps + 1;
 			state.currentGame.points += action.payload;
 		},
+		getClues: (state, action) => {
+			const item = action.payload.map(res => {
+				return res.clues.map(res => {
+					return {
+						...res,
+						right: null,
+					}
+				})
+			});
+			state.categories = action.payload.map(res => {
+				return res.title;
+			})
+			state.questions = item;
+		},
 		incIncorrects: (state, action) => {
-			state.currentGame.incorrect = state.currentGame.incorrect+1;
-			state.currentGame.attemps = state.currentGame.attemps+1;
+			state.currentGame.incorrect = state.currentGame.incorrect + 1;
+			state.currentGame.attemps = state.currentGame.attemps + 1;
 			state.currentGame.points -= action.payload;
 		},
 		setClock: (state, action) => {
@@ -31,7 +57,7 @@ const gameSlice = createSlice({
 		},
 		changeGameStatus: (state, action) => {
 			state.status = action.payload;
-		}, 
+		},
 		setHistory: (state) => {
 			state.history.push(state.currentGame)
 		},
@@ -46,9 +72,38 @@ const gameSlice = createSlice({
 				points: 0,
 				clock: []
 			}
+		},
+		colorChanger: (state, action) => {
+
+			state.questions.forEach((item) => {
+				item.forEach((i) => {
+					if(i.id === state.currentClue){
+						i.right = action.payload;
+					}
+				})
+			})
+		},
+		clearCluesStatus: (state) => {
+			state.questions.forEach((item) => {
+				item.forEach((i) => {
+						i.right = null;
+				})
+			})
 		}
 	}
 
 })
-export const { incCorrects, incIncorrects, setClock, changeGameStatus, setHistory, clearHistory, clearCurrent} = gameSlice.actions
+export const {
+	incCorrects,
+	incIncorrects,
+	setClock,
+	changeGameStatus,
+	setHistory,
+	clearHistory,
+	clearCurrent,
+	getClues,
+	colorChanger,
+	setCurrentClue,
+	clearCluesStatus
+} = gameSlice.actions
 export default gameSlice.reducer;
