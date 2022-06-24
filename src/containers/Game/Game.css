@@ -197,3 +197,8 @@
 	border-radius: 5px;
 	font-size: 18px;
 }
+.close{
+	display: flex;
+	justify-content: flex-end;
+	padding-bottom: 10px;
+}

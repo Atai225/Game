@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Modal from "../../components/UI/Modal/Modal";
 import { useSelector, useDispatch } from "react-redux";
+import { GrClose } from "react-icons/gr";
 import "./Game.css";
 import {
   incIncorrects,
@@ -55,8 +56,9 @@ function Game() {
     target.value = '';
   }
   const submitHandler = (e) => {
-    dispatch(setCurrentClue(currentQuestion.id));
     e.preventDefault();
+    setShow(false);
+    dispatch(setCurrentClue(currentQuestion.id));
     if (answer !== currentQuestion.answer) {
       dispatch(incIncorrects(currentQuestion?.value));
       setAnswerStatus(false);
@@ -69,7 +71,6 @@ function Game() {
       dispatch(colorChanger(true));
     }
     clearField();
-    setShow(false);
     setTimerActive(false);
     setSeconds(60);
     setAnswered(true);
@@ -183,7 +184,7 @@ function Game() {
                     setAnswered(false);
                     setAnswerStatus(null);
                     dispatch(clearCluesStatus())
-                    nav('/')
+                    nav('/statistics')
                   }}
                   className="game__stop-btn"
                 >
@@ -194,8 +195,9 @@ function Game() {
           </div>
           {currentQuestion && (
             <Modal show={show}>
+              <div onClick={submitHandler} className="close"><GrClose className="x-symbol"/></div>
               <form
-                onSubmit={submitHandler}
+              onSubmit={submitHandler}
                 className="answer-form text-center"
               >
                 <div className="form__header">

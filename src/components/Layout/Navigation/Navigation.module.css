@@ -1,12 +1,13 @@
 .nav{
 	display: flex;
 	align-items: center;
-	justify-content: end;
+	justify-content: flex-end;
 }
 .navlink{
 	font-size: 1.4rem;
 	text-decoration: none;
 	color: white;
+	margin-left: 1rem;
 }
 .navlink:hover{
 	color: rgb(0, 0, 0);
@@ -20,5 +21,5 @@
 	-o-transition: .2s linear;
 }
 .navlink:nth-child(1){
-	margin-right: 2rem;
+	margin-left: 0;
 }

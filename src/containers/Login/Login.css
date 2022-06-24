@@ -26,6 +26,9 @@
 	padding: .5rem;
 	margin-top: 1rem;
 }
+.modal-form__btn--dis{
+	background-color: gray;
+}
 .modal-form__label{
 	font-size: 1.2rem;
 }

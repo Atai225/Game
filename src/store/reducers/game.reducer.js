@@ -9,12 +9,14 @@ import {
 const gameSlice = createSlice({
 	name: 'game',
 	initialState: {
+		
 		categories: [],
 		questions: null,
 		loading: "",
 		status: false,
 		history: [],
 		currentGame: {
+			userData: null,
 			correct: 0,
 			incorrect: 0,
 			attemps: 0,
@@ -25,6 +27,9 @@ const gameSlice = createSlice({
 
 	},
 	reducers: {
+		loginUser: (state, action) => {
+			state.currentGame.userData = action.payload;
+		},
 		setCurrentClue: (state, action) => {
 			state.currentClue = action.payload
 		},
@@ -104,6 +109,7 @@ export const {
 	getClues,
 	colorChanger,
 	setCurrentClue,
-	clearCluesStatus
+	clearCluesStatus,
+	loginUser
 } = gameSlice.actions
 export default gameSlice.reducer;
