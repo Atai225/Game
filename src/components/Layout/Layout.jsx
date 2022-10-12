@@ -8,7 +8,7 @@ function Layout(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const catID = [11496, 11513, 11539, 11544, 7824]
+    const catID = [8, 21, 111, 1974, 42]
    
 
     const fetchData = () => {

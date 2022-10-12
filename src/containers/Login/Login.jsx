@@ -54,8 +54,8 @@ function Login() {
 		  <form className='modal-form' onSubmit={login}>
            <div className="form-group">
 			{(userValid && userError) && <div style={{color: 'red'}} >{userError}</div>} 
-             <label htmlFor="name" className='modal-form__label'>Как вас зовут?</label>
-
+			<h2 htmlFor="name" className='modal-form__title'>Добро пожаловать в Jeopardy</h2>
+             <p htmlFor="name" className='modal-form__label'>Как вас зовут?</p>
              <input
               type="text"
               name="name"
